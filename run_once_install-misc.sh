@@ -23,5 +23,5 @@ if command -v atuin >/dev/null 2>&1; then
 else
   echo "Installing Atuin using official install script..."
   curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
+  source $HOME/.atuin/bin/env
 fi
-

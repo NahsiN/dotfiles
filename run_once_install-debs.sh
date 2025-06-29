@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 sudo apt update
 sudo apt install -y nala
@@ -6,7 +6,7 @@ sudo apt install -y nala
 # podman
 sudo nala install -y podman podman-compose
 
-#d ocker
+#docker
 # Add Docker's official GPG key:
 sudo nala install -y ca-certificates curl
 sudo install -m 0755 -d /etc/apt/keyrings
@@ -26,6 +26,7 @@ sudo nala install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 
 sudo groupadd docker
 sudo usermod -aG docker $USER
+newgrp docker
 
 # emacs
 sudo add-apt-repository -y ppa:ubuntuhandbook1/emacs
@@ -93,6 +94,32 @@ sudo nala install -y apt-transport-https
 sudo nala update
 sudo nala install -y code # or code-insiders
 
+
+# dropbox. taken from copilot.microsoft.com
+DROPBOX_DEB_URL="https://www.dropbox.com/download?dl=packages/ubuntu/dropbox_2025.05.20_amd64.deb"
+DROPBOX_DEB_FILE="/tmp/dropbox_2025.05.20_amd64.deb"
+
+# Install only if dropbox is not already in PATH
+if ! command -v dropbox >/dev/null 2>&1; then
+  echo "Dropbox not found, downloading and installing..."
+
+  wget -O "$DROPBOX_DEB_FILE" "$DROPBOX_DEB_URL"
+  sudo nala update
+  sudo nala install -y "$DROPBOX_DEB_FILE"
+  sudo nala install python3-gpg  
+  rm -f "$DROPBOX_DEB_FILE"
+
+  echo "Dropbox installed successfully."
+else
+  echo "Dropbox already installed at: $(command -v dropbox)"
+fi
+
+
+# NVIDIA container toolkit
+
+
+
 echo "Log out and log back in so that your docker group membership is re-evaluated."
+
 
 
