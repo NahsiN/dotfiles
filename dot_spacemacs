@@ -73,6 +73,12 @@ This function should only modify configuration layer settings."
      shell
      markdown
      sql
+     ;; tabs
+     spacemacs-visual
+     ;; (tabs :variables
+     ;;       tabs-selected-tab-bar 'over
+     ;;       tabs-auto-hide f
+     ;;       tabs-icons nil)
      )
 
 

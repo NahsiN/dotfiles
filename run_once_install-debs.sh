@@ -1,47 +1,58 @@
 #!/bin/bash
 
+set -euo pipefail
+
 sudo apt update
 sudo apt install -y nala
+
+# utils
+sudo nala install -y grsync btop neofetch openssh-server molly-guard byobu
 
 # podman
 sudo nala install -y podman podman-compose
 
-#docker
+# docker
 # Add Docker's official GPG key:
-sudo nala install -y ca-certificates curl
-sudo install -m 0755 -d /etc/apt/keyrings
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-sudo chmod a+r /etc/apt/keyrings/docker.asc
+#sudo nala install -y ca-certificates curl
+#sudo install -m 0755 -d /etc/apt/keyrings
+#sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+#sudo chmod a+r /etc/apt/keyrings/docker.asc
+#
 
 # Add the repository to Apt sources:
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo nala update
-
-sudo nala install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+#echo \
+#  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+#  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+#  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+#sudo nala update
+#
+#sudo nala install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 # sudo docker run hello-world
 
 
-sudo groupadd docker
-sudo usermod -aG docker $USER
-newgrp docker
-
+#sudo groupadd docker
+#sudo usermod -aG docker $USER
+#newgrp docker
+#
 # emacs
 sudo add-apt-repository -y ppa:ubuntuhandbook1/emacs
+# PPA_NAME="ubuntuhandbook1/emacs"
+# PPA_FILE="/etc/apt/sources.list.d/${PPA_NAME//\//-}-*.list"
+
+# if ! grep -rq "^deb .*$PPA_NAME" /etc/apt/sources.list.d/; then
+#   sudo add-apt-repository -y ppa:$PPA_NAME
+# fi
 sudo nala update
 sudo nala install -y emacs emacs-common
 
+#
 # tailscale
 curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/noble.noarmor.gpg | sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
 curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/noble.tailscale-keyring.list | sudo tee /etc/apt/sources.list.d/tailscale.list
-
 sudo nala update
 sudo nala install -y tailscale
-
 sudo tailscale up --accept-routes
-# tailscale ip -4
+tailscale ip -4
 
 
 # signal
@@ -54,13 +65,13 @@ cat signal-desktop-keyring.gpg | sudo tee /usr/share/keyrings/signal-desktop-key
 
 # 2. Add our repository to your list of repositories:
 echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/signal-desktop-keyring.gpg] https://updates.signal.org/desktop/apt xenial main' |\
-  sudo tee /etc/apt/sources.list.d/signal-xenial.list
+ sudo tee /etc/apt/sources.list.d/signal-xenial.list
 
 # 3. Update your package database and install Signal:
 sudo nala update && sudo nala install -y signal-desktop
 
 # vscode
-sudo apt-get install wget gpg
+#sudo apt-get install wget gpg
 
 #wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
 #sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
@@ -69,57 +80,57 @@ sudo apt-get install wget gpg
 
 # inspired from copilot.microsoft.com
 # Download the Microsoft GPG key only if needed
-keyring_path="/etc/apt/keyrings/packages.microsoft.gpg"
-if [ ! -f "$keyring_path" ]; then
-  echo "Installing Microsoft GPG key..."
-  wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee "$keyring_path" > /dev/null
-  sudo chmod 644 "$keyring_path"
-else
-  echo "Microsoft GPG key already exists at $keyring_path"
-fi
-
+#keyring_path="/etc/apt/keyrings/packages.microsoft.gpg"
+#if [ ! -f "$keyring_path" ]; then
+#  echo "Installing Microsoft GPG key..."
+#  wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee "$keyring_path" > /dev/null
+#  sudo chmod 644 "$keyring_path"
+#else
+#  echo "Microsoft GPG key already exists at $keyring_path"
+#fi
+#
 # Add the VS Code repo if not already present
-source_list="/etc/apt/sources.list.d/vscode.list"
-source_entry="deb [arch=amd64,arm64,armhf signed-by=$keyring_path] https://packages.microsoft.com/repos/code stable main"
-
-if [ ! -f "$source_list" ] || ! grep -Fxq "$source_entry" "$source_list"; then
-  echo "Adding VS Code repository..."
-  echo "$source_entry" | sudo tee "$source_list" > /dev/null
-else
-  echo "VS Code repository is already configured."
-fi
-
-
-sudo nala install -y apt-transport-https
-sudo nala update
-sudo nala install -y code # or code-insiders
-
+#source_list="/etc/apt/sources.list.d/vscode.list"
+#source_entry="deb [arch=amd64,arm64,armhf signed-by=$keyring_path] https://packages.microsoft.com/repos/code stable main"
+#
+#if [ ! -f "$source_list" ] || ! grep -Fxq "$source_entry" "$source_list"; then
+#  echo "Adding VS Code repository..."
+#  echo "$source_entry" | sudo tee "$source_list" > /dev/null
+#else
+#  echo "VS Code repository is already configured."
+#fi
+#
+#
+#sudo nala install -y apt-transport-https
+#sudo nala update
+#sudo nala install -y code # or code-insiders
+#
 
 # dropbox. taken from copilot.microsoft.com
-DROPBOX_DEB_URL="https://www.dropbox.com/download?dl=packages/ubuntu/dropbox_2025.05.20_amd64.deb"
-DROPBOX_DEB_FILE="/tmp/dropbox_2025.05.20_amd64.deb"
-
+#DROPBOX_DEB_URL="https://www.dropbox.com/download?dl=packages/ubuntu/dropbox_2025.05.20_amd64.deb"
+#DROPBOX_DEB_FILE="/tmp/dropbox_2025.05.20_amd64.deb"
+#
 # Install only if dropbox is not already in PATH
-if ! command -v dropbox >/dev/null 2>&1; then
-  echo "Dropbox not found, downloading and installing..."
-
-  wget -O "$DROPBOX_DEB_FILE" "$DROPBOX_DEB_URL"
-  sudo nala update
-  sudo nala install -y "$DROPBOX_DEB_FILE"
-  sudo nala install python3-gpg  
-  rm -f "$DROPBOX_DEB_FILE"
-
-  echo "Dropbox installed successfully."
-else
-  echo "Dropbox already installed at: $(command -v dropbox)"
-fi
-
+#if ! command -v dropbox >/dev/null 2>&1; then
+#  echo "Dropbox not found, downloading and installing..."
+#
+#  wget -O "$DROPBOX_DEB_FILE" "$DROPBOX_DEB_URL"
+#  sudo nala update
+#  sudo nala install -y "$DROPBOX_DEB_FILE"
+#  sudo nala install python3-gpg
+#  rm -f "$DROPBOX_DEB_FILE"
+#
+#  echo "Dropbox installed successfully."
+#else
+#  echo "Dropbox already installed at: $(command -v dropbox)"
+#fi
+#
 
 # NVIDIA container toolkit
 
 
 
-echo "Log out and log back in so that your docker group membership is re-evaluated."
+#echo "Log out and log back in so that your docker group membership is re-evaluated."
 
 
 

@@ -1,2 +1,3 @@
 #!/bin/sh
-brew install atuin
+
+brew install chezmoi ramalama
