@@ -6,7 +6,7 @@ sudo apt update
 sudo apt install -y nala
 
 # utils
-sudo nala install -y grsync btop neofetch openssh-server molly-guard byobu
+sudo nala install -y grsync btop neofetch openssh-server molly-guard byobu nfs-common cachefilesd build-essential
 
 # podman
 sudo nala install -y podman podman-compose
